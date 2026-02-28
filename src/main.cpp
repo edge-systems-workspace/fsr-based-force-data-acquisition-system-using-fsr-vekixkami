@@ -1,44 +1,65 @@
 #include <Arduino.h>
+
 /**
  * @file main.ino
  * @brief Embedded Force Measurement System using FSR
- * @author YOUR_NAME
- * @date YYYY-MM-DD
+ * @author Vedansh
+ * @date 2026-02-28
  *
  * @details
- * Reads analog force data from FSR sensor and
- * displays structured output via Serial Monitor.
+ * This program reads analog force data from a Force Sensitive Resistor (FSR)
+ * connected to analog pin A0. The raw ADC value (0–1023) represents the
+ * amount of pressure applied to the sensor. A simple threshold-based logic
+ * is used to detect whether significant pressure is applied or not, and
+ * the result is displayed in a structured format on the Serial Monitor.
  */
 
- // TODO 1:
- // Define FSR analog pin (Use A0)
+// Define FSR analog pin (Use A0)
+#define FSR_PIN A0   ///< Analog pin connected to FSR sensor output
 
- // TODO 2:
- // Create variable to store sensor reading
+// Variable to store sensor reading
+int fsrReading;      ///< Stores raw ADC value from FSR (0–1023)
 
+/**
+ * @brief Initializes serial communication and system message.
+ *
+ * This function runs once when the Arduino starts.
+ * It sets up Serial communication for monitoring sensor readings.
+ */
 void setup() {
 
-    // TODO 3:
     // Initialize Serial communication (9600 baud rate)
+    Serial.begin(9600);
 
-    // TODO 4:
     // Print system initialization message
+    Serial.println("FSR Force Measurement System Initialized");
 }
 
+/**
+ * @brief Continuously reads FSR value and detects applied pressure.
+ *
+ * The loop reads the analog voltage from the FSR sensor,
+ * prints the raw ADC value, and applies a threshold-based
+ * logic to determine whether pressure is detected.
+ */
 void loop() {
 
-    // TODO 5:
     // Read analog value from FSR
+    // Range: 0 (no force) to 1023 (maximum force)
+    fsrReading = analogRead(FSR_PIN);
 
-    // TODO 6:
-    // Print raw ADC value
+    // Print raw ADC value to Serial Monitor
+    Serial.print("FSR Reading: ");
+    Serial.println(fsrReading);
 
-    // TODO 7:
-    // Apply simple threshold logic (e.g., detect pressure)
+    // Apply simple threshold logic to detect applied pressure
+    // Threshold can be calibrated based on sensor sensitivity
+    if (fsrReading > 200) {
+        Serial.println("Pressure Detected");        ///< Significant force applied
+    } else {
+        Serial.println("No Significant Pressure");  ///< Little or no force applied
+    }
 
-    // TODO 8:
-    // Print pressure detection message
-
-    // TODO 9:
-    // Add delay (500ms or 1 second)
+    // Add delay (500ms) for stable readings and readability
+    delay(500);
 }
